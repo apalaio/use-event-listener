@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState, useRef } from "react";
+import "./App.css";
 
-function App() {
+function useEventListener(eventType, handler) {
+  const handleRef = useRef(handler);
+
+  useEffect(() => {
+    handleRef.current = handler;
+  });
+
+  //Runs once
+  useEffect(() => {
+    function internalHandler(e) {
+      return handleRef.current(e);
+    }
+
+    document.addEventListener(eventType, internalHandler);
+
+    return () => document.removeEventListener(eventType, internalHandler);
+  }, [eventType]);
+}
+
+function UseEventListenerPage() {
+  const [count, setCount] = useState(0);
+
+  useEventListener("click", () => {
+    console.log("clicked somewhere", count);
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>useEventListener</h1>
+      <button onClick={() => setCount((c) => c + 1)}>Hello ({count})</button>
     </div>
   );
 }
 
-export default App;
+export default UseEventListenerPage;
