@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import "./App.css";
 
 function useEventListener(eventType, handler) {
   const handleRef = useRef(handler);
